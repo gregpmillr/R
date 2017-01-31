@@ -92,3 +92,16 @@ normalizeVector(vec)
 
 
 #PART 2
+
+#1)
+set.seed(340)
+
+#2)
+x <- rnorm(1000, 500, 100)
+
+#3)
+hist(x,probability = TRUE)
+
+#4)
+curve(dnorm(x, mean=500,sd=100), col="blue", lwd=2, add=TRUE)
+
