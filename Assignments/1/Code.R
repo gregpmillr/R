@@ -97,11 +97,25 @@ normalizeVector(vec)
 set.seed(340)
 
 #2)
-x <- rnorm(1000, 500, 100)
+nmean <- 500
+nsd <- 100
+x <- rnorm(1000, nmean, nsd)
 
 #3)
 hist(x,probability = TRUE)
 
 #4)
 curve(dnorm(x, mean=500,sd=100), col="blue", lwd=2, add=TRUE)
+
+#5)
+firstXVal <- quantile(x,probs=0.05)
+secondXVal <- quantile(x,probs=0.95)
+#plot lines for quantile values of x
+abline(v=firstXVal)
+abline(v=secondXVal)
+
+#6)
+#display x val beside line
+text(firstXVal,0.003,paste("x=",firstXVal,sep=""),adj=1.1)
+text(secondXVal,0.003,paste("x=",secondXVal,sep=""),adj=c(-.1,-.1))
 
