@@ -119,3 +119,29 @@ abline(v=secondXVal)
 text(firstXVal,0.003,paste("x=",firstXVal,sep=""),adj=1.1)
 text(secondXVal,0.003,paste("x=",secondXVal,sep=""),adj=c(-.1,-.1))
 
+
+
+#PART 3
+
+set.seed(99)
+
+## prepare data set
+train = data.frame(x1 = runif(20,-1,1), x2 = runif(20,-1,1), label = rep(NA,20))
+
+## assign labels based on x,y coordinates
+train[train$x1>0 & train$x2 >0, "label"] = "red" #quadrant 1
+train[train$x1<0 & train$x2 >0, "label"] = "green" #quadrant 2
+train[train$x1<0 & train$x2 <0, "label"] = "orange" 
+train[train$x1>0 & train$x2 <0, "label"] = "blue" #quadrant 1
+
+## plot the points
+plot(train[,1:2], col=train$label,pch=19,asp=1,xlim=c(-1,1),ylim=c(-1,1))
+abline(h=0,lty=3)
+abline(v=0,lty=3)
+
+p = c(0.1,-0.5)  # test data
+points(0.1,-0.5,pch=10)
+
+library(class)
+m1 <- knn(train=train[,1:2],test=p,cl=train[,3],k=5,prob=T)
+m1
