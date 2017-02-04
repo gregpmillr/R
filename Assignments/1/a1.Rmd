@@ -1,64 +1,107 @@
-#PART 1
+---
+title: "STAT-2450-Assignment1"
+author: "Greg Miller"
+date: "February 3, 2017"
+output:
+  pdf_document: default
+  html_document: default
+---
 
-#Vector and Matrix
-#1)
-vec = c(sample(1:100,12,replace = FALSE))
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# PART 1 - R programming basics
+
+## Vector and Matrix
+### 1)
+```{r}
+## Create vector w/ 12 random numbers 1:100 using the sample function and print
+vec = c(sample(1:100,12,replace = FALSE))  
 print(vec)
+```
 
-#2)
+### 2)
+```{r}
+## Return last 5 elements of the vector vec
 tail(vec,5)
+```
 
-#3)
+### 3)
+```{r}
+## Create matrix mat (3x4) from vector vec
 mat = matrix(vec,3,4)
+```
 
-#4)
+### 4)
+```{r}
+## Return element in 2nd row and 3rd column
 mat[2,3]
+```
 
-#5)
+### 5)
+```{r}
+## Return elements of last 2 rows in last 2 columns
 mat[2:3,3:4]
+```
 
-#6)
-#function iterating through matrix
+### 6)
+```{r}
+## Function iterating through matrix to get odd values and print them
 iterate = function(){
   v <- vector()
   for(i in 1:nrow(mat)){
     for(j in 1:ncol(mat))
     {
-      if(mat[i,j] %% 2 != 0){
-        v <- c(v,mat[i,j])
+      if(mat[i,j] %% 2 != 0){ ## if there's a remainder, it's odd,
+        v <- c(v,mat[i,j]) ## add matrix value to vector
       }
     }
-  }
+  } ## /for
   print(v)
-}
+} ## /function
 
-iterate()
+## Prints all odd values from matrix mat
+iterate() 
+```
 
 
-#Data Frame
-#1)
+## Data Frame
+### 1)
+```{r}
+## Download file
 library(gdata)
-help(read.xls)
-mydata = read.csv(paste(getwd(),"/Downloads/Credit.csv",sep=""))
+setwd("/home/greg/Downloads") ## set working directory
+mydata = read.csv(paste(getwd(),"/Credit.csv",sep="")) ## read in Credit.csv
+```
 
-#2)
+### 2)
+```{r}
+## Display number of rows and columns in mydata dataset
 nrows <- nrow(mydata)
 ncols <- ncol(mydata)
-nrows
-ncols
+print(nrows)
+print(ncols)
+```
 
-#3)
+### 3)
+```{r}
+## Choose rows where Income > 100 and Age < 50
 mydata[mydata$Income>100 & mydata$Age<50,]
+```
 
-#4)
-setwd("/home/greg/Desktop")
-write.table(mydata, file="foo.table", sep=";")
+### 4)
+```{r}
+## Save data and separate columns with ";"
+setwd("/home/greg/Desktop") ## set working directory
+write.table(mydata, file="foo.table", sep=";") ## write to desktop, set separator value
+```
 
-
-#Create a function
-#1)
-#function returning all numbers between startNumber,endNumber which are 
-#divisible by 7 but are not a multiple of 5
+## Create a function
+### 1)
+```{r}
+## function returning all numbers between startNumber,endNumber which are 
+## divisible by 7 but are not a multiple of 5
 findDivisibleNotMultiple = function(startNumber, endNumber){
   v <- c()
   for(i in startNumber:endNumber){
@@ -68,12 +111,14 @@ findDivisibleNotMultiple = function(startNumber, endNumber){
   }
   return(v)
 }
-#find all associated values from 100 to 200
+## find all associated values from 100 to 200
 v <- c(findDivisibleNotMultiple(100,200))
 v
+```
 
-#2)
-#function normalizing a given vector
+### 2)
+```{r}
+## function normalizing a given vector
 normalizeVector = function(v){
   min <- min(v)
   max <- max(v)
@@ -86,86 +131,103 @@ normalizeVector = function(v){
   print(v)
 }
 
-#normalize vector from first question
+## normalize vector from first question
 normalizeVector(vec)
+```
 
 
 
-#PART 2
+# PART 2 - Data Visualization
 
-#1)
-set.seed(340)
+### 1) 
+```{r}
+set.seed(340) ## Set seeder from my last 3 digits of student number
 
-#2)
+## 2)
+## Assign mean and sd, then generate 1000 samples from those values
 nmean <- 500
 nsd <- 100
 x <- rnorm(1000, nmean, nsd)
 
-#3)
+
+## 3) 
+## Use samples to draw histogram
 hist(x,probability = TRUE)
 
-#4)
+## 4) 
+## Add curve matching the distribution
 curve(dnorm(x, mean=500,sd=100), col="blue", lwd=2, add=TRUE)
 
-#5)
+## 5) 
+## add vertical lines at 0.05 and 0.95 quartiles, respectively
 firstXVal <- quantile(x,probs=0.05)
 secondXVal <- quantile(x,probs=0.95)
-#plot lines for quantile values of x
+## plot lines for quantile values of x
 abline(v=firstXVal)
 abline(v=secondXVal)
 
-#6)
-#display x val beside line
+## 6) 
+## display x val text beside line
 text(firstXVal,0.003,paste("x=",firstXVal,sep=""),adj=1.1)
 text(secondXVal,0.003,paste("x=",secondXVal,sep=""),adj=c(-.1,-.1))
+```
 
 
 
-#PART 3
 
-#1)
+
+# PART 3 - KNN
+
+### 1)
+```{r}
+## import ISLR library
 library(ISLR)
-require(ISLR)
 print(ncol(Weekly)) ## num of cols in data set
 print(nrow(Weekly)) ## num of rows in data set
+```
 
-#2)
-head(Weekly)
+### 2)
+```{r}
+## list all column names from Weekly data set
 print(colnames(Weekly))
+```
 
-#3)
+### 3)
+```{r}
+## Perform KNN method to predict direction
 rm(list=ls())
-library(class)
 
+## Import KNN function (with library) and ISLR
+library(class)
 library(ISLR)
 
-#will need to normalize data for graph/plots
+## will need to normalize data for graph/plots
 normalize <- function(x) {
   return( (x - min(x)) / (max(x) - min(x)) )
 }
 
-#apply normalization
+## apply normalization
 Weekly_n <- as.data.frame(lapply(Weekly[,c(2,3)], normalize))
 
-#apply the Years column to the new normalized data frame
+## apply the Years column to the new normalized data frame
 Weekly_n[,"Year"] <- c(Weekly$Year)
 Weekly_n[,"label"] <- rep(NA,1089)
 
-#apply color for labels
+## apply color for labels
 Weekly_n[Weekly_n$Lag1>0.5 & Weekly_n$Lag2 >0.5,"label"] = "red"   # Quadrant 1
 Weekly_n[Weekly_n$Lag1<0.5 & Weekly_n$Lag2 >0.5,"label"] = "green" # Quadrant 2
 Weekly_n[Weekly_n$Lag1<0.5 & Weekly_n$Lag2 <0.5,"label"] = "orange"
 Weekly_n[Weekly_n$Lag1>0.5 & Weekly_n$Lag2 <0.5,"label"] = "blue"
 
-#the "get only these" criteria
+## the "get only these" criteria
 train = (Weekly_n$Year >= 1990 & Weekly_n$Year <= 2008)
 test = (Weekly_n$Year >= 2009 & Weekly_n$Year <= 2010)
 
-#apply the train and test vector to this so we only get what we want
+## apply the train and test vector to this so we only get what we want
 train.X <- cbind(Weekly_n$Lag1,Weekly_n$Lag2)[train,]
 test.X = cbind(Weekly_n$Lag1,Weekly_n$Lag2)[test,]
 
-#set the target (cl) to be Direction and test vector to this so we only get what we want
+## set the target (cl) to be Direction and test vector to this so we only get what we want
 train.target <- Weekly$Direction[train]
 test.target <- Weekly$Direction[test]
 
@@ -177,18 +239,21 @@ mean(knn.pred == test.target) ##how accurate the prediction was
 plot(Weekly_n[,1:2],col=Weekly_n$label,pch=5,asp=1,xlim=c(0,1),ylim=c(0,1))
 abline(h=0.5,lty=3)
 abline(v=0.5,lty=3)
+```
 
-#4)
+### 4)
+```{r}
 ## The random seed is set before applying knn() because
 ## if there are tied observations, we must randomly break the tie using R.
 ## The seed is set because we'd want to reproduce results!
+```
 
-
-#5 **AND** 6)
-#draw plot 
+### 5 AND 6)
+```{r}
+## draw plot 
 plot(1, type="n", xlim=c(0, 30), ylim=c(0, 1), xlab="K", ylab="Accuracy Rate")
 
-#plot points for various values of k
+## plot points for various values of k
 for(i in 1:20){
   if(i == 1){
     set.seed(1)
@@ -208,11 +273,13 @@ for(i in 1:20){
 } ##end for
 
 ## I would choose k=15, as it has the highest rate of accuracy.
+```
 
-
-#7)
+### 7)
+```{r}
 ## Although I've already added normalization, if I didn't add it in
 ## then it would be the extra needed step because the values generally
 ## stay smaller and in a more precise decimal value compared to Lag1
 ## and Lag2 which has sporatic values. I did/would normalize this data
 ## using feature scaling.
+```
